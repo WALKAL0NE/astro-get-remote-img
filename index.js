@@ -166,11 +166,14 @@ async function processHtmlFile(
 // Download image from URL with timeout and proper URL encoding
 async function downloadImage(imageUrl, imagesPath) {
   try {
+    // Decode HTML entities (&amp; → &) that Astro encodes in attribute values
+    const cleanUrl = imageUrl.replace(/&amp;/g, '&');
+
     // Properly encode the URL to handle special characters
-    const encodedUrl = encodeURI(decodeURI(imageUrl));
+    const encodedUrl = encodeURI(decodeURI(cleanUrl));
 
     // Generate unique filename using URL hash
-    const urlHash = crypto.createHash('md5').update(imageUrl).digest('hex');
+    const urlHash = crypto.createHash('md5').update(cleanUrl).digest('hex');
 
     // Extract original extension from URL if possible
     const urlParts = new URL(encodedUrl);

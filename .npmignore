@@ -6,6 +6,7 @@ node_modules/
 # Test files
 test/
 *.test.js
+test.js
 
 # Config files
 .eslintrc*

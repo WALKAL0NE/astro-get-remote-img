@@ -1,10 +1,10 @@
 {
   "name": "astro-get-remote-img",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Astro integration to download remote assets from CMS and update HTML references during build",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
