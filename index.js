@@ -166,8 +166,8 @@ async function processHtmlFile(
 // Download image from URL with timeout and proper URL encoding
 async function downloadImage(imageUrl, imagesPath) {
   try {
-    // Decode HTML entities (&amp; → &) that Astro encodes in attribute values
-    const cleanUrl = imageUrl.replace(/&amp;/g, '&');
+    // Decode HTML entities (&amp; / &#38; / &#x26; → &) that Astro encodes in attribute values
+    const cleanUrl = imageUrl.replace(/&amp;|&#38;|&#x26;/gi, '&');
 
     // Properly encode the URL to handle special characters
     const encodedUrl = encodeURI(decodeURI(cleanUrl));

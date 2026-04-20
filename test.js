@@ -29,7 +29,7 @@ function test(name, fn) {
 // ロジックをここに複製して同一性を保証するテストとする。
 
 function cleanUrl(imageUrl) {
-  return imageUrl.replace(/&amp;/g, '&');
+  return imageUrl.replace(/&amp;|&#38;|&#x26;/gi, '&');
 }
 
 function getExtension(encodedUrl) {
@@ -81,6 +81,18 @@ test('複数の &amp; をすべて変換する', () => {
   const input  = 'https://example.com/img.png?a=1&amp;b=2&amp;c=3';
   const result = cleanUrl(input);
   assert.strictEqual(result, 'https://example.com/img.png?a=1&b=2&c=3');
+});
+
+test('&#38; → & に変換される（Astro の数値参照エンコード）', () => {
+  const input  = 'https://images.microcms-assets.io/assets/abc/kv_05.png?auto=compress&#38;fm=avif&#38;w=1000';
+  const result = cleanUrl(input);
+  assert.strictEqual(result, 'https://images.microcms-assets.io/assets/abc/kv_05.png?auto=compress&fm=avif&w=1000');
+});
+
+test('&#x26; → & に変換される（16進数参照エンコード）', () => {
+  const input  = 'https://example.com/img.png?a=1&#x26;b=2';
+  const result = cleanUrl(input);
+  assert.strictEqual(result, 'https://example.com/img.png?a=1&b=2');
 });
 
 console.log('\n【2】ダウンロード URL の構築');
