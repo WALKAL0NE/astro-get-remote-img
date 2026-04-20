@@ -44,6 +44,11 @@ function getExtension(encodedUrl) {
       extension = ext;
     }
   }
+  const fmExtMap = { avif: '.avif', webp: '.webp', jpg: '.jpg', jpeg: '.jpg', png: '.png', gif: '.gif' };
+  const fmParam = urlParts.searchParams.get('fm');
+  if (fmParam && fmExtMap[fmParam]) {
+    extension = fmExtMap[fmParam];
+  }
   return extension;
 }
 
@@ -123,6 +128,28 @@ test('クエリパラメータ付き .jpg URL から .jpg を取得', () => {
 
 test('拡張子なし URL はデフォルト .jpg を返す', () => {
   const url = 'https://images.microcms-assets.io/assets/abc/photo?w=800';
+  assert.strictEqual(getExtension(url), '.jpg');
+});
+
+console.log('\n【5】fm パラメータによる拡張子の上書き');
+
+test('fm=avif → .png の URL でも .avif になる', () => {
+  const url = 'https://images.microcms-assets.io/assets/abc/kv_05.png?auto=compress&fm=avif&w=1000';
+  assert.strictEqual(getExtension(url), '.avif');
+});
+
+test('fm=webp → .png の URL でも .webp になる', () => {
+  const url = 'https://images.microcms-assets.io/assets/abc/photo.png?fm=webp&w=800';
+  assert.strictEqual(getExtension(url), '.webp');
+});
+
+test('fm=auto → 拡張子は pathname のまま（auto はマップ外）', () => {
+  const url = 'https://images.microcms-assets.io/assets/abc/photo.png?fm=auto&w=800';
+  assert.strictEqual(getExtension(url), '.png');
+});
+
+test('fm なし → pathname の拡張子を使う', () => {
+  const url = 'https://images.microcms-assets.io/assets/abc/photo.jpg?w=800';
   assert.strictEqual(getExtension(url), '.jpg');
 });
 

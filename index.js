@@ -192,6 +192,13 @@ async function downloadImage(imageUrl, imagesPath) {
       }
     }
 
+    // fm query parameter overrides extension (CDN format conversion e.g. fm=avif, fm=webp)
+    const fmExtMap = { avif: '.avif', webp: '.webp', jpg: '.jpg', jpeg: '.jpg', png: '.png', gif: '.gif' };
+    const fmParam = urlParts.searchParams.get('fm');
+    if (fmParam && fmExtMap[fmParam]) {
+      extension = fmExtMap[fmParam];
+    }
+
     // Create unique filename with hash
     const filename = `cms-image-${urlHash}${extension}`;
 
